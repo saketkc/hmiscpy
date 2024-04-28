@@ -8,7 +8,11 @@ from .utils import rename_states
 
 
 def extract_numbers_from_html_df(
-    df, metric_colname, metric_code, total_colnames=["Total [(A+B) or (C+D)]"]
+    df,
+    metric_colname,
+    metric_code,
+    total_colnames=["Total [(A+B) or (C+D)]"],
+    verbose=False,
 ):
     code_df = list_codes()
     metric_desc = code_df[code_df["code"] == metric_code]["description"].values[0]
@@ -34,13 +38,13 @@ def extract_numbers_from_html_df(
                     "metric_desc": metric_desc,
                     "value": value,
                     "value_type": "Total [(A+B) or (C+D)]",
+                    "read_mode": "html",
                 }
             )
         else:
             for value_type in total_colnames:
                 try:
                     value = df.loc[row_index, ("State", state, value_type)].values[0]
-
                     all_df.append(
                         {
                             "state": state,
@@ -48,22 +52,28 @@ def extract_numbers_from_html_df(
                             "metric_desc": metric_desc,
                             "value": value,
                             "value_type": value_type,
+                            "read_mode": "html",
                         }
                     )
                 except KeyError:
-                    print(
-                        "Skipping",
-                        {
-                            "state": state,
-                            "metric_code": metric_code,
-                            "metric_desc": metric_desc,
-                        },
-                    )
+                    if verbose:
+                        sys.stderr.write(
+                            "Skipping",
+                            {
+                                "state": state,
+                                "metric_code": metric_code,
+                                "metric_desc": metric_desc,
+                            },
+                        )
     return all_df
 
 
 def extract_numbers_from_excel_df(
-    df, metric_colname, metric_code, total_colnames=["Total [(A+B) or (C+D)]"]
+    df,
+    metric_colname,
+    metric_code,
+    total_colnames=["Total [(A+B) or (C+D)]"],
+    verbose=False,
 ):
     code_df = list_codes()
     metric_desc = code_df[code_df["code"] == metric_code]["description"].values[0]
@@ -83,16 +93,19 @@ def extract_numbers_from_excel_df(
                         "metric_desc": metric_desc,
                         "value": value,
                         "value_type": value_type,
+                        "read_mode": "excel",
                     }
                 )
             except ValueError:
-                print("Skipping {} {}".format(state, value_type))
+                if verbose:
+                    sys.stderr.write("Skipping {} {}\n".format(state, value_type))
 
 
 def read_hmis_xls(
     filepath,
     codes=["4.1.1.a", "4.1.1.b"],
     total_colnames=["Total [(A+B) or (C+D)]", "Urban [C]", "Rural [D]"],
+    verbose=False,
 ):
     month = (
         filepath.replace(" ", "")
@@ -123,13 +136,13 @@ def read_hmis_xls(
     df = rename_states(df)
     parsed_results = list()
     for code in codes:
-        print(code, metric_colname)
         if metric_colname == "metric":
             result_df = extract_numbers_from_excel_df(
                 df,
                 metric_colname=metric_colname,
                 metric_code=code,
                 total_colnames=total_colnames,
+                verbose=verbose,
             )
             parsed_results += result_df
         else:
@@ -138,6 +151,7 @@ def read_hmis_xls(
                 metric_colname=metric_colname,
                 metric_code=code,
                 total_colnames=total_colnames,
+                verbose=verbose,
             )
             parsed_results += result_df
     df = pd.DataFrame(parsed_results)

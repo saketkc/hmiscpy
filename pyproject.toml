@@ -19,7 +19,9 @@ classifiers = [
 license = {text = "MIT license"}
 dependencies = [
   "typer",
-  "pandas"
+  "pandas",
+  "lxml",
+  "html5lib"
 ]
 
 [project.optional-dependencies]
