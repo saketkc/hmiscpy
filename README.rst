@@ -13,10 +13,13 @@ HMIS Utilities
 
 
 
-Python package to extract information from excel files hosted by HMIS, MoHFW India.
+Python package to extract information from excel files hosted by HMIS, MoHFW India. 
+See `demo notebook <blob/master/notebooks/01_Demo.ipynb>`_
+
 
 
 * Free software: MIT license
 * Documentation: https://hmispy.readthedocs.io.
+
 
 
