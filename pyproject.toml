@@ -21,7 +21,9 @@ dependencies = [
   "typer",
   "pandas",
   "lxml",
-  "html5lib"
+  "html5lib",
+  "openpyxl",
+  "xlrd"
 ]
 
 [project.optional-dependencies]

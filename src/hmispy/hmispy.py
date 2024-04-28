@@ -99,6 +99,7 @@ def extract_numbers_from_excel_df(
             except ValueError:
                 if verbose:
                     sys.stderr.write("Skipping {} {}\n".format(state, value_type))
+    return all_df
 
 
 def read_hmis_xls(
@@ -123,7 +124,7 @@ def read_hmis_xls(
         df[metric_colname] = df[metric_colname].replace({"\\'": ""}, regex=True)
 
     except UnicodeDecodeError:
-        sys.stderr.write("Got unicode error with {}-{}\n".format(path, f))
+        sys.stderr.write("Got unicode error with {}\n".format(filepath))
 
         df = pd.read_excel(filepath, skiprows=6)  # [0]
         df = df.replace({"\\'": ""}, regex=True)
