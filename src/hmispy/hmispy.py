@@ -2,7 +2,9 @@
 
 import pandas as pd
 import sys
-from utils import list_states
+from .utils import list_codes
+from .utils import list_states
+from .utils import rename_states
 
 
 def extract_numbers_from_html_df(
@@ -87,7 +89,7 @@ def extract_numbers_from_excel_df(
                 print("Skipping {} {}".format(state, value_type))
 
 
-def read_hmisc_xls(
+def read_hmis_xls(
     filepath,
     codes=["4.1.1.a", "4.1.1.b"],
     total_colnames=["Total [(A+B) or (C+D)]", "Urban [C]", "Rural [D]"],
@@ -118,6 +120,7 @@ def read_hmisc_xls(
         df.columns.values[2] = "value_type"
         df["metric"] = df["metric"].replace({"\\'": ""}, regex=True)
         metric_colname = "metric"
+    df = rename_states(df)
     parsed_results = list()
     for code in codes:
         print(code, metric_colname)

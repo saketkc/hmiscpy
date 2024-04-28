@@ -1,5 +1,5 @@
-import pandas as pd
 import os
+import pandas as pd
 
 
 def rename_states(df):
@@ -10,6 +10,7 @@ def rename_states(df):
             "Jammu And Kashmir": "Jammu & Kashmir",
         }
     )
+    return df
 
 
 def list_states():
@@ -55,14 +56,23 @@ def list_states():
         "Uttarakhand",
         "West Bengal",
     ]
+    return states
 
 
 def list_codes():
     csv_file_path = os.path.join(
-        os.path.dirname(__file__), "data", "code_description.csv"
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")),
+        "data",
+        "code_description.csv",
     )
-    df = pd.read_csv(csv_file_path)
+    df = pd.read_csv(csv_file_path, index_col=0)
     return df
+
+
+def search_codes(pattern):
+    pattern = pattern.lower()
+    df = list_codes()
+    return df.loc[df["description"].str.lower().str.contains(pattern)]
 
 
 def format_excel_df(df):
