@@ -14,7 +14,7 @@ HMIS Utilities
 
 
 Python package to extract information from excel files hosted by HMIS, MoHFW India. 
-See `demo notebook <blob/master/notebooks/01_Demo.ipynb>`_
+See `demo notebook </notebooks/01_Demo.ipynb>`_
 
 
 
